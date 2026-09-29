@@ -2,7 +2,7 @@
 
 Analizador de enlaces y entrenamiento contra el phishing. Maqueta educativa de **For Security**, proyecto de colaboración España – Finlandia.
 
-**Demo:** `https://TU-USUARIO.github.io/anti-phish-lite/` *(cámbialo por tu enlace cuando actives GitHub Pages)*
+**Demo:** https://lukenurdanpilleta02-design.github.io/anti-phish-lite/
 
 [English below](#english)
 
