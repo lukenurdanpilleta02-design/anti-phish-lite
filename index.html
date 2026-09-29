@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Anti Phish Lite: analizador de enlaces y entrenamiento contra el phishing (maqueta educativa de For Security).">
+<style>[hidden]{display:none!important} img{max-width:100%}</style>
+<title>Anti Phish Lite</title>
+<!-- Política de seguridad: la página no puede conectarse a ningún servidor externo.
+     Solo carga sus propias fuentes (carpeta fonts/). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='9' y='1' width='14' height='30' rx='7' fill='%23232D3A'/%3E%3Ccircle cx='16' cy='8' r='4' fill='%23C22F2F'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%239C6400'/%3E%3Ccircle cx='16' cy='24' r='4' fill='%231B8453'/%3E%3C/svg%3E">
+<style>
+  /* Fuentes alojadas en el propio proyecto (licencia SIL OFL 1.1, ver fonts/) */
+  @font-face { font-family: "Archivo"; font-style: normal; font-display: swap; font-weight: 100 900; font-stretch: 62% 125%;
+    src: url("fonts/archivo-latin-wdth-normal.woff2") format("woff2");
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "Archivo"; font-style: normal; font-display: swap; font-weight: 100 900; font-stretch: 62% 125%;
+    src: url("fonts/archivo-latin-ext-wdth-normal.woff2") format("woff2");
+    unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face { font-family: "Instrument Sans"; font-style: normal; font-display: swap; font-weight: 400 700;
+    src: url("fonts/instrument-sans-latin-wght-normal.woff2") format("woff2");
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "Instrument Sans"; font-style: normal; font-display: swap; font-weight: 400 700;
+    src: url("fonts/instrument-sans-latin-ext-wght-normal.woff2") format("woff2");
+    unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face { font-family: "JetBrains Mono"; font-style: normal; font-display: swap; font-weight: 100 800;
+    src: url("fonts/jetbrains-mono-latin-wght-normal.woff2") format("woff2");
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "JetBrains Mono"; font-style: normal; font-display: swap; font-weight: 100 800;
+    src: url("fonts/jetbrains-mono-latin-ext-wght-normal.woff2") format("woff2");
+    unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face { font-family: "JetBrains Mono"; font-style: normal; font-display: swap; font-weight: 100 800;
+    src: url("fonts/jetbrains-mono-cyrillic-wght-normal.woff2") format("woff2");
+    unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+  @font-face { font-family: "JetBrains Mono"; font-style: normal; font-display: swap; font-weight: 100 800;
+    src: url("fonts/jetbrains-mono-cyrillic-ext-wght-normal.woff2") format("woff2");
+    unicode-range: U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F; }
+  @font-face { font-family: "JetBrains Mono"; font-style: normal; font-display: swap; font-weight: 100 800;
+    src: url("fonts/jetbrains-mono-greek-wght-normal.woff2") format("woff2");
+    unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF; }
+
+  :root {
+    --bg: #F2F5F9;
+    --surface: #FFFFFF;
+    --surface-2: #E8EEF4;
+    --ink: #12284A;
+    --text: #1C2A3A;
+    --muted: #586A7E;
+    --line: #D2DBE5;
+    --accent: #1D7688;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #DCEFF2;
+    --bar: #12284A;
+    --bar-text: #FFFFFF;
+    --bar-muted: #A9BCD4;
+    --safe: #1B8453;
+    --safe-soft: #E0F3E9;
+    --warn: #9C6400;
+    --warn-soft: #FCF0D6;
+    --danger: #C22F2F;
+    --danger-soft: #FBE4E4;
+    --housing: #232D3A;
+    --lamp-off: #3A4654;
+    --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --display: "Archivo", "Instrument Sans", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0C141F; --surface: #132030; --surface-2: #1A2A3D; --ink: #E9F0F8; --text: #D3DDE8;
+      --muted: #8FA2B7; --line: #26384D; --accent: #4DB5C8; --accent-ink: #062129; --accent-soft: #15323B;
+      --bar: #08101A; --bar-text: #EEF3F9; --bar-muted: #8FA2B7;
+      --safe: #4CC38A; --safe-soft: #12301F; --warn: #E7AE45; --warn-soft: #362A10;
+      --danger: #F07474; --danger-soft: #3B1A1D; --housing: #070C13; --lamp-off: #283341;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0C141F; --surface: #132030; --surface-2: #1A2A3D; --ink: #E9F0F8; --text: #D3DDE8;
+    --muted: #8FA2B7; --line: #26384D; --accent: #4DB5C8; --accent-ink: #062129; --accent-soft: #15323B;
+    --bar: #08101A; --bar-text: #EEF3F9; --bar-muted: #8FA2B7;
+    --safe: #4CC38A; --safe-soft: #12301F; --warn: #E7AE45; --warn-soft: #362A10;
+    --danger: #F07474; --danger-soft: #3B1A1D; --housing: #070C13; --lamp-off: #283341;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 400 15px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+    padding-inline: 16px;
+    padding-block: 0 40px;
+  }
+  .wrap { max-width: 1000px; margin-inline: auto; }
+  button, input { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  /* ---------- barra superior ---------- */
+  .topbar { background: var(--bar); color: var(--bar-text); margin-inline: -16px; padding: 14px 16px; }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .wordmark { font-family: var(--display); font-stretch: 125%; font-weight: 800; font-size: 1.35rem; letter-spacing: -0.01em; margin: 0; }
+  .wordmark .lite { font-weight: 600; font-stretch: 100%; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; border: 1.5px solid currentColor; border-radius: 4px; padding: 1px 6px; margin-left: 6px; vertical-align: 3px; }
+  .by { color: var(--bar-muted); font-size: 0.85rem; }
+  .lang { display: inline-flex; border: 1.5px solid var(--bar-muted); border-radius: 8px; overflow: hidden; }
+  .lang button { background: transparent; border: 0; color: var(--bar-muted); padding: 5px 12px; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.08em; }
+  .lang button[aria-pressed="true"] { background: var(--bar-text); color: var(--bar); }
+
+  /* ---------- pestañas ---------- */
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-block: 20px 28px; overflow-x: auto; }
+  .tabs button { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 14px 9px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+  .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+  .tabs button:hover { color: var(--ink); }
+
+  h1, h2, h3 { color: var(--ink); text-wrap: balance; }
+  h1 { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: clamp(1.6rem, 4.2vw, 2.35rem); line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 6px; }
+  h2 { font-family: var(--display); font-stretch: 108%; font-weight: 750; font-size: 1.15rem; margin: 0 0 12px; }
+  .lead { color: var(--muted); margin: 0 0 20px; max-width: 62ch; }
+  .eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+  /* ---------- formulario ---------- */
+  .check { display: flex; gap: 10px; flex-wrap: wrap; }
+  .check label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .check input {
+    flex: 1 1 280px; min-width: 0; font-family: var(--mono); font-size: 0.95rem;
+    padding: 14px 16px; border: 2px solid var(--line); border-radius: 10px; background: var(--surface);
+  }
+  .check input:focus { border-color: var(--accent); outline: none; }
+  .btn-primary { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 10px; padding: 14px 26px; font-weight: 700; font-size: 1rem; }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .examples { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+  .examples span { color: var(--muted); font-size: 0.88rem; margin-right: 4px; }
+  .chip { background: var(--surface); border: 1.5px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: 0.84rem; font-weight: 600; color: var(--text); }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ---------- resultado ---------- */
+  .result { margin-top: 28px; }
+  .lvl-low { --lvl: var(--safe); --lvl-soft: var(--safe-soft); }
+  .lvl-med { --lvl: var(--warn); --lvl-soft: var(--warn-soft); }
+  .lvl-high { --lvl: var(--danger); --lvl-soft: var(--danger-soft); }
+  .grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 780px) { .grid { grid-template-columns: minmax(0, 330px) minmax(0, 1fr); align-items: start; } }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  .verdict { border-top: 5px solid var(--lvl); display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: start; }
+  .light { background: var(--housing); border-radius: 34px; padding: 10px; display: grid; gap: 9px; }
+  .lamp { width: 40px; height: 40px; border-radius: 50%; background: var(--lamp-off); transition: background .3s, box-shadow .3s; }
+  .lamp.on.r { background: var(--danger); box-shadow: 0 0 18px color-mix(in srgb, var(--danger) 65%, transparent); }
+  .lamp.on.a { background: var(--warn); box-shadow: 0 0 18px color-mix(in srgb, var(--warn) 65%, transparent); }
+  .lamp.on.g { background: var(--safe); box-shadow: 0 0 18px color-mix(in srgb, var(--safe) 65%, transparent); }
+  .level { font-family: var(--display); font-stretch: 115%; font-weight: 800; font-size: 1.35rem; color: var(--lvl); letter-spacing: 0.01em; margin: 0; line-height: 1.15; }
+  .score { font-family: var(--display); font-weight: 800; font-size: 2.1rem; color: var(--ink); font-variant-numeric: tabular-nums; line-height: 1.1; margin: 4px 0 8px; }
+  .score small { font-size: 1rem; color: var(--muted); font-weight: 600; }
+  .meter { height: 9px; border-radius: 5px; background: var(--surface-2); overflow: hidden; }
+  .meter span { display: block; height: 100%; background: var(--lvl); border-radius: inherit; transition: width .5s ease; }
+  .advice { grid-column: 1 / -1; background: var(--lvl-soft); border-radius: 8px; padding: 12px 14px; }
+  .advice strong { display: block; color: var(--ink); margin-bottom: 2px; }
+  .advice p { margin: 0; }
+  .disclaimer { grid-column: 1 / -1; font-size: 0.8rem; color: var(--muted); margin: 0; }
+
+  .anatomy { display: flex; flex-wrap: wrap; row-gap: 12px; font-family: var(--mono); font-size: 0.95rem; margin-bottom: 6px; }
+  .seg { display: flex; flex-direction: column; min-width: 0; }
+  .seg code { font-family: inherit; padding: 6px 1px; border-bottom: 3px solid var(--line); word-break: break-all; color: var(--muted); }
+  .seg small { font-family: var(--sans); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding-top: 5px; padding-right: 10px; }
+  .seg.user code { color: var(--danger); text-decoration: line-through; border-color: var(--danger); }
+  .seg.user small { color: var(--danger); }
+  .seg.sub code { color: var(--warn); border-color: var(--warn); }
+  .seg.sub small { color: var(--warn); }
+  .seg.dom code { color: var(--ink); font-weight: 600; background: var(--accent-soft); border-color: var(--accent); padding-inline: 4px; }
+  .seg.dom small { color: var(--accent); }
+  .idn { font-size: 0.85rem; color: var(--muted); margin: 6px 0 0; }
+  .idn code { font-family: var(--mono); color: var(--danger); }
+
+  .reasons { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 12px; }
+  .reasons li { display: grid; grid-template-columns: 3.4rem 1fr; gap: 12px; align-items: start; }
+  .pts { font-family: var(--mono); font-weight: 600; font-size: 0.85rem; text-align: center; border-radius: 6px; padding: 3px 0; color: #fff; background: var(--warn); font-variant-numeric: tabular-nums; }
+  .pts.big { background: var(--danger); }
+  :root[data-theme="dark"] .pts { color: #0C141F; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pts { color: #0C141F; } }
+  .reasons b { display: block; color: var(--ink); font-weight: 650; }
+  .reasons .rid { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-right: 6px; }
+  .reasons p { margin: 1px 0 0; color: var(--text); }
+  .none { color: var(--muted); margin: 14px 0 0; }
+  .notes { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+  .notes li { font-size: 0.88rem; color: var(--muted); padding-left: 16px; position: relative; }
+  .notes li::before { content: ""; position: absolute; left: 2px; top: 0.6em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .passed { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--line); }
+  .passed-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .ok { font-size: 0.78rem; border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; color: var(--muted); }
+  .ok::before { content: "✓ "; color: var(--safe); font-weight: 700; }
+  .error { background: var(--warn-soft); border: 1px solid var(--warn); color: var(--ink); border-radius: 10px; padding: 14px 16px; }
+
+  /* ---------- entrenamiento ---------- */
+  .train-head { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+  .progress-text { font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .progress { height: 7px; background: var(--surface-2); border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+  .progress span { display: block; height: 100%; background: var(--accent); transition: width .4s ease; }
+  .train-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 780px) { .train-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; } }
+  .msg { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .msg-top { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--surface-2); flex-wrap: wrap; }
+  .channel { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: var(--ink); color: var(--bg); border-radius: 4px; padding: 2px 7px; }
+  .fict { font-size: 0.78rem; color: var(--muted); }
+  .msg-meta { padding: 14px 16px 0; display: grid; gap: 3px; font-size: 0.92rem; }
+  .msg-meta span { color: var(--muted); display: inline-block; min-width: 4.2em; }
+  .msg-meta .from { font-family: var(--mono); font-size: 0.85rem; word-break: break-all; }
+  .msg-body { padding: 14px 16px 18px; }
+  .bubble { background: var(--surface-2); border-radius: 16px 16px 16px 4px; padding: 12px 14px; max-width: 95%; }
+  .msg-body p { margin: 0; }
+  .fake-link { display: inline-block; margin-top: 10px; font-family: var(--mono); font-size: 0.88rem; color: var(--accent); text-decoration: underline dotted; text-underline-offset: 3px; word-break: break-all; }
+  .choices { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .choice { flex: 1 1 140px; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 1rem; border: 2px solid; }
+  .choice.legit { background: var(--surface); color: var(--safe); border-color: var(--safe); }
+  .choice.phish { background: var(--danger); color: #fff; border-color: var(--danger); }
+  :root[data-theme="dark"] .choice.phish { color: #0C141F; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .choice.phish { color: #0C141F; } }
+  .choice:disabled { opacity: 0.45; cursor: default; }
+  .choice.picked { opacity: 1; box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--ink); }
+  .feedback { border-radius: 12px; padding: 18px; border: 1px solid var(--line); background: var(--surface); }
+  .feedback.good { background: var(--safe-soft); border-color: var(--safe); }
+  .feedback.bad { background: var(--danger-soft); border-color: var(--danger); }
+  .feedback h3 { margin: 0 0 4px; font-size: 1.1rem; }
+  .feedback .sub { margin: 0 0 12px; color: var(--ink); font-weight: 600; }
+  .clues { margin: 0 0 16px; padding-left: 20px; display: grid; gap: 6px; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-ghost { background: transparent; border: 1.5px solid var(--ink); color: var(--ink); border-radius: 10px; padding: 11px 16px; font-weight: 700; }
+  .hint { color: var(--muted); font-size: 0.92rem; padding: 18px; border: 1px dashed var(--line); border-radius: 12px; }
+  .end { text-align: left; }
+  .end .big { font-family: var(--display); font-stretch: 115%; font-weight: 800; font-size: 3rem; color: var(--ink); line-height: 1; margin: 8px 0; font-variant-numeric: tabular-nums; }
+
+  /* ---------- cómo funciona ---------- */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 0.9rem; }
+  th { text-align: left; background: var(--ink); color: var(--bg); font-weight: 650; padding: 10px 12px; }
+  td { padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+  td code { font-family: var(--mono); font-size: 0.82rem; word-break: break-all; }
+  td.num { text-align: center; font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .levels { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 12px; }
+  .lv { border-radius: 10px; padding: 12px 14px; background: var(--lvl-soft); border-left: 5px solid var(--lvl); }
+  .lv b { color: var(--lvl); font-family: var(--display); font-stretch: 112%; }
+  .lv span { display: block; font-family: var(--mono); font-size: 0.8rem; color: var(--muted); margin: 2px 0 4px; }
+  .lv p { margin: 0; font-size: 0.9rem; }
+  .info { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 16px; }
+  .info .card p { margin: 0; }
+  section + section { margin-top: 32px; }
+  .block { margin-top: 28px; }
+
+  footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.82rem; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <p class="wordmark">Anti Phish<span class="lite">Lite</span></p>
+      <span class="by" data-i18n="tagline"></span>
+    </div>
+    <div class="lang" role="group" aria-label="Idioma / Language">
+      <button type="button" id="lang-es" data-lang="es" aria-pressed="true">ES</button>
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" role="tablist">
+    <button type="button" role="tab" id="tab-analizar" data-tab="analizar" aria-selected="true" data-i18n="tabAnalyze"></button>
+    <button type="button" role="tab" id="tab-entrenar" data-tab="entrenar" aria-selected="false" data-i18n="tabTrain"></button>
+    <button type="button" role="tab" id="tab-reglas" data-tab="reglas" aria-selected="false" data-i18n="tabRules"></button>
+  </nav>
+
+  <main>
+    <!-- ================= ANALIZADOR ================= -->
+    <section id="panel-analizar" role="tabpanel">
+      <h1 data-i18n="h1"></h1>
+      <p class="lead" data-i18n="lead"></p>
+      <form class="check" id="form-analizar" autocomplete="off">
+        <label for="url" data-i18n="inputLabel"></label>
+        <input id="url" name="url" type="text" spellcheck="false" autocapitalize="off" inputmode="url" data-i18n-ph="placeholder">
+        <button class="btn-primary" type="submit" id="btn-analizar" data-i18n="analyze"></button>
+      </form>
+      <div class="examples" id="examples"></div>
+      <div class="result" id="resultado" aria-live="polite"></div>
+    </section>
+
+    <!-- ================= ENTRENAMIENTO ================= -->
+    <section id="panel-entrenar" role="tabpanel" hidden>
+      <div class="train-head">
+        <div>
+          <h1 data-i18n="trainTitle"></h1>
+          <p class="lead" style="margin-bottom:0" data-i18n="trainLead"></p>
+        </div>
+        <span class="progress-text" id="train-progress"></span>
+      </div>
+      <div class="progress"><span id="train-bar" style="width:0%"></span></div>
+      <div id="train-area"></div>
+    </section>
+
+    <!-- ================= CÓMO FUNCIONA ================= -->
+    <section id="panel-reglas" role="tabpanel" hidden>
+      <h1 data-i18n="rulesTitle"></h1>
+      <p class="lead" data-i18n="rulesLead"></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th data-i18n="thRule"></th><th data-i18n="thExample"></th><th data-i18n="thWhy"></th><th data-i18n="thPoints"></th></tr></thead>
+          <tbody id="rules-body"></tbody>
+        </table>
+      </div>
+      <div class="block">
+        <h2 data-i18n="levelsTitle"></h2>
+        <div class="levels" id="levels"></div>
+      </div>
+      <div class="info">
+        <div class="card"><h2 data-i18n="privacyTitle"></h2><p data-i18n="privacyText"></p></div>
+        <div class="card"><h2 data-i18n="limitsTitle"></h2><p data-i18n="limitsText"></p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer data-i18n="footer"></footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =====================================================================
+     1. DATOS DE CONFIGURACIÓN (en un proyecto real irían en archivos JSON)
+     ===================================================================== */
+
+  // Puntos de cada regla
+  const POINTS = { R1: 25, R2: 30, R3: 30, R4: 20, R5: 25, R6: 10, R7: 10, R8: 10, R9: 10, R10: 10 };
+  const RULE_IDS = Object.keys(POINTS);
+
+  // Marcas y sus dominios oficiales (lista blanca). Las 6 últimas son ficticias (modo entrenamiento).
+  const BRANDS = [
+    { name: "Google", keys: ["google", "gmail"], domains: ["google.com", "google.es", "google.fi", "gmail.com", "youtube.com"] },
+    { name: "PayPal", keys: ["paypal"], domains: ["paypal.com", "paypal.me"] },
+    { name: "Microsoft", keys: ["microsoft", "outlook", "hotmail", "onedrive", "office365"], domains: ["microsoft.com", "live.com", "outlook.com", "office.com", "microsoftonline.com", "hotmail.com", "sharepoint.com"] },
+    { name: "Apple", keys: ["apple", "icloud"], domains: ["apple.com", "icloud.com"] },
+    { name: "Amazon", keys: ["amazon"], domains: ["amazon.com", "amazon.es", "amazon.de", "amazon.co.uk", "amazon.fr", "amazon.it"] },
+    { name: "Netflix", keys: ["netflix"], domains: ["netflix.com"] },
+    // Redes sociales y mensajería
+    { name: "Facebook", keys: ["facebook"], domains: ["facebook.com", "fb.com", "fb.me", "messenger.com", "meta.com", "fbcdn.net"] },
+    { name: "Instagram", keys: ["instagram"], domains: ["instagram.com", "instagr.am", "threads.net", "threads.com"] },
+    { name: "WhatsApp", keys: ["whatsapp"], domains: ["whatsapp.com", "whatsapp.net", "wa.me"] },
+    { name: "LinkedIn", keys: ["linkedin"], domains: ["linkedin.com", "lnkd.in"] },
+    { name: "TikTok", keys: ["tiktok"], domains: ["tiktok.com"] },
+    { name: "YouTube", keys: ["youtube"], domains: ["youtube.com", "youtu.be"] },
+    { name: "X (Twitter)", keys: ["twitter"], domains: ["x.com", "twitter.com", "t.co"] },
+    { name: "Discord", keys: ["discord"], domains: ["discord.com", "discord.gg", "discordapp.com", "discord.gift"] },
+    { name: "Telegram", keys: ["telegram"], domains: ["telegram.org", "t.me"] },
+    { name: "Snapchat", keys: ["snapchat"], domains: ["snapchat.com"] },
+    { name: "Twitch", keys: ["twitch"], domains: ["twitch.tv"], noTypo: true },
+    { name: "Reddit", keys: ["reddit"], domains: ["reddit.com", "redd.it"] },
+    { name: "Pinterest", keys: ["pinterest"], domains: ["pinterest.com", "pinterest.es", "pin.it"], noTypo: true },
+    { name: "DocuSign", keys: ["docusign"], domains: ["docusign.com", "docusign.net"] },
+    { name: "Dropbox", keys: ["dropbox"], domains: ["dropbox.com"] },
+    { name: "Adobe", keys: ["adobe"], domains: ["adobe.com"] },
+    { name: "DHL", keys: ["dhl"], domains: ["dhl.com", "dhl.es", "dhl.de", "dhl.fi"] },
+    { name: "FedEx", keys: ["fedex"], domains: ["fedex.com"] },
+    { name: "Correos", keys: ["correos"], domains: ["correos.es", "correos.com"] },
+    { name: "Posti", keys: ["posti"], domains: ["posti.fi"] },
+    { name: "Santander", keys: ["santander"], domains: ["santander.com", "bancosantander.es", "santander.es"] },
+    { name: "BBVA", keys: ["bbva"], domains: ["bbva.es", "bbva.com"] },
+    { name: "CaixaBank", keys: ["caixabank"], domains: ["caixabank.es", "caixabank.com"] },
+    { name: "Nordea", keys: ["nordea"], domains: ["nordea.fi", "nordea.com"] },
+    { name: "Agencia Tributaria", keys: ["agenciatributaria", "hacienda"], domains: ["agenciatributaria.es", "agenciatributaria.gob.es", "hacienda.gob.es"] },
+    { name: "Steam", keys: ["steampowered", "steamcommunity"], domains: ["steampowered.com", "steamcommunity.com"] },
+    { name: "Binance", keys: ["binance"], domains: ["binance.com"] },
+    { name: "Coinbase", keys: ["coinbase"], domains: ["coinbase.com"] },
+    { name: "GitHub", keys: ["github"], domains: ["github.com", "github.io"] },
+    { name: "Spotify", keys: ["spotify"], domains: ["spotify.com"] },
+    // Empresas ficticias del modo entrenamiento
+    { name: "EnviosYa", keys: ["enviosya"], domains: ["envios-ya.es"] },
+    { name: "NubeDocs", keys: ["nubedocs"], domains: ["nubedocs.com"] },
+    { name: "BancoNorte", keys: ["banconorte"], domains: ["banconorte.es"] },
+    { name: "HexaTech", keys: ["hexatech"], domains: ["hexatech.com"] },
+    { name: "Streamly", keys: ["streamly"], domains: ["streamly.com"] },
+    { name: "PohjoisPosti", keys: ["pohjoisposti"], domains: ["pohjoisposti.fi"] },
+  ];
+
+  const SHORTENERS = new Set(["bit.ly", "bitly.com", "tinyurl.com", "t.co", "goo.gl", "ow.ly", "is.gd", "buff.ly", "cutt.ly", "rebrand.ly", "shorturl.at", "rb.gy", "t.ly", "s.id", "tiny.cc", "lnkd.in"]);
+  const MULTI_SUFFIX = new Set(["co.uk", "org.uk", "ac.uk", "gov.uk", "com.es", "org.es", "nom.es", "gob.es", "edu.es", "com.au", "com.br", "co.jp", "com.mx", "com.ar", "co.in", "com.tr", "co.nz"]);
+  const TLD_LIKE = new Set(["com", "net", "org", "es", "fi", "de", "fr", "it", "uk", "co", "gob", "gov", "edu", "info", "eu", "se", "io", "us"]);
+  const FILE_TLD = new Set(["zip", "mov"]);
+  const CHEAP_TLD = new Set(["top", "icu", "cfd", "sbs", "click", "buzz", "cyou", "rest"]);
+  // Palabras cebo en español, inglés y finés (sin tildes: el texto se normaliza antes de buscar)
+  const BAIT = ["login", "log-in", "signin", "sign-in", "logon", "verify", "verification", "verificar", "verificacion", "validar", "validate",
+    "account", "cuenta", "update", "actualizar", "secure", "seguridad", "security", "password", "contrasena", "banking", "banca",
+    "factura", "invoice", "urgente", "urgent", "confirm", "confirmar", "suspend", "bloqueada", "blocked", "unlock", "desbloquear",
+    "wallet", "payment", "pago", "refund", "reembolso", "aduana", "customs", "acceso", "access", "firmar",
+    "copyright", "appeal", "claim", "kirjaudu", "vahvista", "tunnistaudu", "maksu", "lasku", "paketti"];
+
+  // Letras de otros alfabetos y números que imitan letras latinas
+  const HOMOGLYPHS = { "а": "a", "е": "e", "о": "o", "р": "p", "с": "c", "х": "x", "у": "y", "і": "i", "ј": "j", "ӏ": "l", "ԁ": "d", "ѕ": "s", "ԛ": "q", "ԝ": "w",
+    "ο": "o", "α": "a", "ν": "v", "ρ": "p", "ι": "i", "κ": "k", "τ": "t", "ɡ": "g", "ı": "i",
+    "0": "o", "1": "l", "3": "e", "4": "a", "5": "s", "7": "t", "8": "b", "9": "g" };
+
+  const EXAMPLES = [
+    { es: "PayPal falso", en: "Fake PayPal", url: "http://paypa1.com.verificar-cuenta.xyz/login" },
+    { es: "Google oficial", en: "Real Google", url: "https://accounts.google.com/ServiceLogin" },
+    { es: "Instagram falso", en: "Fake Instagram", url: "https://instagram-copyright-help.com/appeal" },
+    { es: "Discord Nitro falso", en: "Fake Discord Nitro", url: "https://dlscord-nitro.gift/claim" },
+    { es: "Dirección IP", en: "IP address", url: "http://203.0.113.4/banca/login" },
+    { es: "Letras cirílicas", en: "Cyrillic letters", url: "https://xn--80ak6aa92e.com/" },
+    { es: "Truco de la @", en: "The @ trick", url: "https://google.com@docusign-contrato.top/firmar" },
+    { es: "Acortador", en: "URL shortener", url: "bit.ly/3xYzContrato" },
+    { es: "Extensión .zip", en: ".zip domain", url: "https://factura-octubre.zip/descargar" },
+  ];
+
+  /* =====================================================================
+     2. TEXTOS (español / inglés)
+     ===================================================================== */
+  const T = {
+    es: {
+      tagline: "Analizador de enlaces contra el phishing · For Security",
+      tabAnalyze: "Analizar enlace", tabTrain: "Modo entrenamiento", tabRules: "Cómo funciona",
+      h1: "¿Te fías de este enlace?",
+      lead: "Pégalo aquí. No lo abrimos ni lo enviamos a ningún sitio: solo analizamos el texto.",
+      inputLabel: "Enlace a analizar", placeholder: "https://…", analyze: "Analizar",
+      examples: "Prueba con un ejemplo:",
+      levels: { low: "RIESGO BAJO", med: "RIESGO MEDIO", high: "RIESGO ALTO" },
+      advice: {
+        low: ["Sin señales claras de phishing.", "Aun así, comprueba que esperabas este mensaje y que el remitente es quien dice ser."],
+        official: ["Dominio oficial de {brand}.", "Parece legítimo, pero comprueba que esperabas el mensaje: los atacantes también abusan de webs reales."],
+        med: ["Hay señales sospechosas.", "No introduzcas contraseñas ni datos. Si dice venir de una empresa, entra en su web escribiendo tú la dirección."],
+        high: ["No abras este enlace.", "Escribe tú la dirección oficial en el navegador y avisa a tu departamento de IT."],
+      },
+      disclaimer: "Esta herramienta es una ayuda: ningún análisis garantiza el 100 %.",
+      anatomy: "Anatomía del enlace",
+      seg: { scheme: "protocolo", user: "se ignora", sub: "subdominio", dom: "dominio real", path: "ruta" },
+      idn: "En pantalla se ve como",
+      why: "¿Por qué?", noHits: "No ha saltado ninguna regla.",
+      passed: "Sin alertas en",
+      notes: {
+        official: "{brand} está en nuestra lista blanca de dominios oficiales.",
+        noScheme: "No indicaste http:// ni https://, así que no valoramos el cifrado.",
+      },
+      errors: {
+        empty: "Pega un enlace para analizarlo.",
+        invalid: "Eso no parece un enlace web. Revisa que esté completo, por ejemplo: https://ejemplo.com",
+        scheme: "Solo analizamos enlaces web que empiezan por http:// o https://.",
+      },
+      rules: {
+        R1: { name: "IP en lugar de dominio", ex: "http://203.0.113.4/login", why: "Las webs legítimas usan nombres de dominio, no números.",
+          msg: { ip: (p) => `El enlace apunta a una dirección IP (${p.ip}) en lugar de a un nombre de dominio. Las webs legítimas casi nunca se presentan así.` } },
+        R2: { name: "Dominio que imita a una marca", ex: "g00gle.com · paypa1.com", why: "Cambia letras por números o letras parecidas, o usa el nombre de una marca en un dominio que no es suyo.",
+          msg: {
+            glyph: (p) => `«${p.token}» imita a «${p.key}» (${p.brand}): cambia letras por números o por caracteres parecidos.`,
+            typo: (p) => `«${p.token}» se parece mucho a «${p.key}» (${p.brand}): solo cambia ${p.d === 1 ? "una letra" : p.d + " letras"}.`,
+            name: (p) => `Usa el nombre de ${p.brand}, pero el dominio real (${p.domain}) no pertenece a ${p.brand}.`,
+            gov: (p) => `«${p.domain}» imita un dominio de la administración pública (.gob.es / .gov), pero no lo es.`,
+          } },
+        R3: { name: "Letras de otros alfabetos (punycode)", ex: "xn--80ak6aa92e.com", why: "Se ve como «apple.com», pero usa letras cirílicas idénticas a las latinas.",
+          msg: { puny: (p) => `El dominio usa punycode (${p.label}). En pantalla se ve como «${p.decoded}», con letras de otros alfabetos que parecen latinas.` } },
+        R4: { name: "Símbolo @ en el enlace", ex: "https://google.com@web-falsa.com", why: "El navegador ignora lo que va antes de @ y va a la otra web.",
+          msg: { at: (p) => `El navegador ignora lo que va antes de @ («${p.user}»). El destino real es ${p.host}.` } },
+        R5: { name: "Marca o dominio falso en el subdominio", ex: "microsoft.com.verificar-cuenta.xyz", why: "Parece Microsoft, pero el dominio real es verificar-cuenta.xyz.",
+          msg: { sub: (p) => `El dominio real es ${p.domain}. Lo que va delante («${p.sub}») es un subdominio que cualquiera puede inventar.` } },
+        R6: { name: "Acortador de enlaces", ex: "bit.ly/3xYz", why: "Oculta el destino real.",
+          msg: { short: (p) => `${p.domain} es un acortador: no deja ver adónde lleva realmente el enlace.` } },
+        R7: { name: "Palabras cebo", ex: "login, verify, factura, urgente", why: "Típicas de páginas que piden contraseñas o pagos.",
+          msg: { bait: (p) => `Contiene palabras típicas de los engaños: ${p.words}.` } },
+        R8: { name: "Sin HTTPS", ex: "http://…", why: "Conexión sin cifrar. Tener HTTPS tampoco garantiza que la web sea segura.",
+          msg: { http: () => "Usa http://, una conexión sin cifrar. Ojo: tener https tampoco garantiza que la web sea de fiar." } },
+        R9: { name: "Enlace demasiado largo o con muchos subdominios", ex: "más de 75 caracteres o más de 3 subdominios", why: "Se usa para esconder el dominio real.",
+          msg: {
+            len: (p) => `Tiene ${p.n} caracteres: los enlaces tan largos suelen esconder el dominio real.`,
+            subs: (p) => `Tiene ${p.n} niveles de subdominio, algo poco habitual en webs legítimas.`,
+            hyph: (p) => `El dominio tiene ${p.n} guiones, un truco habitual para parecer oficial.`,
+          } },
+        R10: { name: "Extensión de dominio engañosa", ex: ".zip · .mov · .top", why: "Se confunde con un archivo, o es una extensión barata muy usada en campañas de phishing.",
+          msg: {
+            file: (p) => `La extensión .${p.tld} se confunde con un archivo: parece que descargas un documento, pero es una web.`,
+            cheap: (p) => `La extensión .${p.tld} es barata y aparece a menudo en campañas de phishing.`,
+          } },
+      },
+      trainTitle: "Modo entrenamiento",
+      trainLead: "Lee cada mensaje y decide si es legítimo o phishing. Todas las empresas y personas son ficticias.",
+      caseOf: (i, n, k) => `Caso ${i} de ${n} · Aciertos: ${k}`,
+      channel: { email: "Correo", sms: "SMS", chat: "Chat" },
+      fictional: "empresa ficticia", from: "De:", subject: "Asunto:",
+      legit: "Legítimo", phish: "Phishing",
+      pickHint: "Elige una opción para ver las pistas del mensaje.",
+      correct: "¡Correcto!", wrong: "No exactamente.", wasPhish: "Era phishing.", wasLegit: "Era legítimo.",
+      analyzeLink: "Analizar este enlace", next: "Siguiente caso", finish: "Ver resultado",
+      endTitle: "Entrenamiento terminado", endScore: (k, n) => `Has acertado ${k} de ${n} casos.`,
+      endMsg: { top: "¡Excelente! Tienes buen ojo para el phishing.", mid: "Bien, pero repasa las pistas de los casos que has fallado.", low: "Cuidado: repasa las reglas en «Cómo funciona» y vuelve a intentarlo." },
+      restart: "Empezar de nuevo",
+      rulesTitle: "Cómo funciona",
+      rulesLead: "El analizador separa el enlace en sus partes y le aplica 10 reglas. Cada regla que salta suma puntos; la suma (hasta 100) decide el nivel de riesgo.",
+      thRule: "Regla", thExample: "Ejemplo", thWhy: "Por qué es sospechoso", thPoints: "Puntos",
+      levelsTitle: "Niveles de riesgo",
+      levelText: { low: "No hay señales claras, pero sigue prestando atención al remitente.", med: "Hay señales sospechosas: comprueba el remitente por otra vía y no introduzcas datos.", high: "No abras el enlace. Escribe tú la dirección oficial y avisa a tu departamento de IT." },
+      privacyTitle: "Privacidad",
+      privacyText: "Todo el análisis ocurre en tu navegador. El enlace nunca se abre ni se envía a ningún servidor, y no guardamos nada de lo que pegas.",
+      limitsTitle: "Limitaciones",
+      limitsText: "Las reglas no detectan el phishing alojado en webs legítimas que han sido hackeadas ni en servicios conocidos (formularios o almacenamiento en la nube), y pueden dar alguna falsa alarma. Por eso nunca mostramos «100 % seguro».",
+      footer: "Maqueta educativa de For Security · Proyecto de colaboración España – Finlandia · Las empresas del modo entrenamiento son ficticias.",
+      cases: [
+        { ch: "sms", from: "EnviosYa", body: "Tu paquete está retenido en aduanas. Paga 1,99 € antes de 24 h o será devuelto:", link: "envios-ya.entrega-pago.top/aduana", answer: "phish",
+          clues: ["Urgencia: «antes de 24 h».", "Un pago pequeño es el cebo para robar los datos de tu tarjeta.", "El dominio real es entrega-pago.top, no el de EnviosYa (envios-ya.es)."] },
+        { ch: "email", from: "NubeDocs <notificaciones@nubedocs.com>", subject: "Documento listo para firmar: Acuerdo comercial Q4", body: "Hola, Pedro: Laura Gómez (Grupo Arenal) te ha enviado «Acuerdo comercial Q4» para firmar. Puedes revisarlo y firmarlo en tu cuenta de NubeDocs.", link: "https://app.nubedocs.com/documentos/8KQ2", answer: "legit",
+          clues: ["El remitente y el enlace usan el dominio oficial nubedocs.com.", "Es un contrato que esperabas: el cliente te avisó por teléfono.", "No hay urgencia ni amenazas. Si dudas, entra en NubeDocs desde tus favoritos."] },
+        { ch: "email", from: "NubeDocs Firma <nubedocs.firma@gmail.com>", subject: "URGENTE: tu contrato caduca hoy", body: "Tienes un documento pendiente que caducará en 2 horas. Inicia sesión para no perderlo:", link: "http://nubedocs.firma-segura.xyz/login", answer: "phish",
+          clues: ["El remitente usa una cuenta de Gmail, no el dominio de NubeDocs.", "El dominio real es firma-segura.xyz: «nubedocs» es solo un subdominio.", "Urgencia extrema y enlace sin HTTPS."] },
+        { ch: "email", from: "BancoNorte <avisos@banconorte-seguridad.com>", subject: "Acceso inusual detectado en tu cuenta", body: "Hemos bloqueado tu cuenta por seguridad. Verifica tu identidad para desbloquearla:", link: "https://banconorte.es.verificacion-clientes.com/acceso", answer: "phish",
+          clues: ["El dominio real es verificacion-clientes.com: «banconorte.es» es un subdominio falso.", "Usa el miedo (cuenta bloqueada) para que actúes rápido.", "Los bancos no piden verificar tu identidad mediante un enlace."] },
+        { ch: "chat", from: "+34 6XX XXX 214 (número desconocido)", body: "Hola, mamá, se me ha roto el móvil y este es mi número nuevo. ¿Me puedes hacer una transferencia de 480 €? Es urgente, luego te explico.", link: null, answer: "phish",
+          clues: ["Un número desconocido dice ser un familiar.", "Pide dinero con prisa y sin explicaciones.", "Antes de hacer nada, llama al número de siempre."] },
+        { ch: "email", from: "Soporte IT <it@hexatech.com>", subject: "Recordatorio: formación de ciberseguridad el jueves", body: "Hola a todos: os recordamos la sesión de formación del jueves a las 10:00. Tenéis la agenda en la intranet:", link: "https://intranet.hexatech.com/formacion", answer: "legit",
+          clues: ["El remitente y el enlace son del dominio de tu empresa (hexatech.com).", "Solo informa: no pide contraseñas ni pagos.", "Es un evento que ya conocías."] },
+        { ch: "email", from: "Servicio de correo <admin@hexatech-mail.support>", subject: "Tu buzón está lleno (99 %)", body: "Dejarás de recibir correos en 12 horas. Amplía tu espacio gratis iniciando sesión:", link: "https://hexatech-mail.support/cuota/login", answer: "phish",
+          clues: ["hexatech-mail.support se parece al dominio de tu empresa, pero no es hexatech.com.", "Amenaza con que perderás correos para meterte prisa.", "Pide iniciar sesión desde un enlace del correo."] },
+        { ch: "sms", from: "PohjoisPosti", body: "No hemos podido entregar tu paquete. Actualiza tu dirección de entrega aquí:", link: "posti-fi.delivery-update.icu/track", answer: "phish",
+          clues: ["Un aviso de paquetería que no esperabas.", "El dominio real es delivery-update.icu, ajeno a cualquier empresa de correos.", "«posti-fi» imita una web finlandesa: los atacantes adaptan el engaño a cada país."] },
+        { ch: "email", from: "Streamly <facturacion@streamly.com>", subject: "Tu recibo de octubre", body: "Hola, Pedro: ya está disponible tu recibo de octubre (12,99 €). Puedes consultarlo cuando quieras en tu cuenta.", link: "https://www.streamly.com/cuenta/recibos", answer: "legit",
+          clues: ["Dominio oficial de Streamly en el remitente y en el enlace.", "No pide datos ni pagos extra: solo informa.", "El importe coincide con tu suscripción habitual."] },
+        { ch: "email", from: "Oficina de Impuestos <reembolsos@gob-es.info>", subject: "Tienes un reembolso de 348,50 €", body: "Tras revisar tu declaración, te corresponde una devolución. Reclámala antes de 48 h introduciendo los datos de tu tarjeta:", link: "https://reembolso.gob-es.info/solicitud", answer: "phish",
+          clues: ["«gob-es.info» imita los dominios oficiales .gob.es, pero no lo es.", "Dinero inesperado y un plazo corto: el cebo clásico.", "Ningún organismo público pide los datos de tu tarjeta por correo."] },
+      ],
+    },
+    en: {
+      tagline: "Link checker against phishing · For Security",
+      tabAnalyze: "Check a link", tabTrain: "Training mode", tabRules: "How it works",
+      h1: "Do you trust this link?",
+      lead: "Paste it here. We never open it or send it anywhere: we only analyse the text.",
+      inputLabel: "Link to check", placeholder: "https://…", analyze: "Check",
+      examples: "Try an example:",
+      levels: { low: "LOW RISK", med: "MEDIUM RISK", high: "HIGH RISK" },
+      advice: {
+        low: ["No clear signs of phishing.", "Still, make sure you expected this message and the sender is who they claim to be."],
+        official: ["Official {brand} domain.", "It looks legitimate, but check that you expected the message: attackers also abuse real websites."],
+        med: ["There are suspicious signs.", "Don't enter passwords or personal data. If it claims to come from a company, type its address yourself."],
+        high: ["Don't open this link.", "Type the official address in your browser yourself and tell your IT department."],
+      },
+      disclaimer: "This tool is an aid: no analysis is ever 100 % certain.",
+      anatomy: "Anatomy of the link",
+      seg: { scheme: "protocol", user: "ignored", sub: "subdomain", dom: "real domain", path: "path" },
+      idn: "On screen it looks like",
+      why: "Why?", noHits: "No rule was triggered.",
+      passed: "No alerts for",
+      notes: {
+        official: "{brand} is on our allowlist of official domains.",
+        noScheme: "You didn't include http:// or https://, so encryption wasn't assessed.",
+      },
+      errors: {
+        empty: "Paste a link to check it.",
+        invalid: "That doesn't look like a web link. Make sure it's complete, for example: https://example.com",
+        scheme: "We only check web links that start with http:// or https://.",
+      },
+      rules: {
+        R1: { name: "IP address instead of a domain", ex: "http://203.0.113.4/login", why: "Legitimate sites use domain names, not numbers.",
+          msg: { ip: (p) => `The link points to an IP address (${p.ip}) instead of a domain name. Legitimate sites almost never look like this.` } },
+        R2: { name: "Domain imitating a brand", ex: "g00gle.com · paypa1.com", why: "Swaps letters for numbers or look-alike letters, or uses a brand name on a domain it doesn't own.",
+          msg: {
+            glyph: (p) => `"${p.token}" imitates "${p.key}" (${p.brand}): it swaps letters for numbers or look-alike characters.`,
+            typo: (p) => `"${p.token}" is very close to "${p.key}" (${p.brand}): only ${p.d === 1 ? "one letter changes" : p.d + " letters change"}.`,
+            name: (p) => `It uses the name ${p.brand}, but the real domain (${p.domain}) doesn't belong to ${p.brand}.`,
+            gov: (p) => `"${p.domain}" imitates a government domain (.gob.es / .gov), but it isn't one.`,
+          } },
+        R3: { name: "Letters from other alphabets (punycode)", ex: "xn--80ak6aa92e.com", why: "It looks like \"apple.com\" but uses Cyrillic letters identical to Latin ones.",
+          msg: { puny: (p) => `The domain uses punycode (${p.label}). On screen it looks like "${p.decoded}", with letters from other alphabets that look Latin.` } },
+        R4: { name: "@ symbol in the link", ex: "https://google.com@fake-site.com", why: "The browser ignores everything before @ and goes to the other site.",
+          msg: { at: (p) => `The browser ignores everything before @ ("${p.user}"). The real destination is ${p.host}.` } },
+        R5: { name: "Brand or fake domain in the subdomain", ex: "microsoft.com.verify-account.xyz", why: "Looks like Microsoft, but the real domain is verify-account.xyz.",
+          msg: { sub: (p) => `The real domain is ${p.domain}. The part in front ("${p.sub}") is a subdomain anyone can make up.` } },
+        R6: { name: "Link shortener", ex: "bit.ly/3xYz", why: "Hides the real destination.",
+          msg: { short: (p) => `${p.domain} is a link shortener: you can't see where the link really goes.` } },
+        R7: { name: "Bait words", ex: "login, verify, invoice, urgent", why: "Typical of pages that ask for passwords or payments.",
+          msg: { bait: (p) => `It contains words typical of scams: ${p.words}.` } },
+        R8: { name: "No HTTPS", ex: "http://…", why: "Unencrypted connection. Having HTTPS doesn't make a site safe either.",
+          msg: { http: () => "It uses http://, an unencrypted connection. Note: https doesn't make a site trustworthy either." } },
+        R9: { name: "Very long link or many subdomains", ex: "over 75 characters or more than 3 subdomains", why: "Used to hide the real domain.",
+          msg: {
+            len: (p) => `It is ${p.n} characters long: very long links often hide the real domain.`,
+            subs: (p) => `It has ${p.n} subdomain levels, which is unusual for legitimate sites.`,
+            hyph: (p) => `The domain has ${p.n} hyphens, a common trick to look official.`,
+          } },
+        R10: { name: "Misleading domain extension", ex: ".zip · .mov · .top", why: "Easily mistaken for a file, or a cheap extension often used in phishing campaigns.",
+          msg: {
+            file: (p) => `The .${p.tld} extension looks like a file: you think you're downloading a document, but it's a website.`,
+            cheap: (p) => `The .${p.tld} extension is cheap and often appears in phishing campaigns.`,
+          } },
+      },
+      trainTitle: "Training mode",
+      trainLead: "Read each message and decide whether it's legitimate or phishing. All companies and people are fictional.",
+      caseOf: (i, n, k) => `Case ${i} of ${n} · Correct: ${k}`,
+      channel: { email: "Email", sms: "SMS", chat: "Chat" },
+      fictional: "fictional company", from: "From:", subject: "Subject:",
+      legit: "Legitimate", phish: "Phishing",
+      pickHint: "Choose an option to see the clues in the message.",
+      correct: "Correct!", wrong: "Not quite.", wasPhish: "It was phishing.", wasLegit: "It was legitimate.",
+      analyzeLink: "Check this link", next: "Next case", finish: "See result",
+      endTitle: "Training complete", endScore: (k, n) => `You got ${k} of ${n} right.`,
+      endMsg: { top: "Excellent! You have a good eye for phishing.", mid: "Good, but review the clues for the cases you missed.", low: "Careful: review the rules in \"How it works\" and try again." },
+      restart: "Start again",
+      rulesTitle: "How it works",
+      rulesLead: "The checker splits the link into its parts and applies 10 rules. Each rule that fires adds points; the total (up to 100) sets the risk level.",
+      thRule: "Rule", thExample: "Example", thWhy: "Why it's suspicious", thPoints: "Points",
+      levelsTitle: "Risk levels",
+      levelText: { low: "No clear signs, but keep paying attention to the sender.", med: "Suspicious signs: verify the sender another way and don't enter any data.", high: "Don't open the link. Type the official address yourself and tell your IT department." },
+      privacyTitle: "Privacy",
+      privacyText: "All analysis happens in your browser. The link is never opened or sent to any server, and nothing you paste is stored.",
+      limitsTitle: "Limitations",
+      limitsText: "The rules can't detect phishing hosted on hacked legitimate sites or on well-known services (forms, cloud storage), and they may raise the odd false alarm. That's why we never show \"100 % safe\".",
+      footer: "Educational prototype by For Security · Spain – Finland collaboration project · Companies in training mode are fictional.",
+      cases: [
+        { ch: "sms", from: "EnviosYa", body: "Your parcel is held at customs. Pay €1.99 within 24 hours or it will be returned:", link: "envios-ya.entrega-pago.top/aduana", answer: "phish",
+          clues: ["Urgency: \"within 24 hours\".", "A small payment is the bait to steal your card details.", "The real domain is entrega-pago.top, not EnviosYa's (envios-ya.es)."] },
+        { ch: "email", from: "NubeDocs <notificaciones@nubedocs.com>", subject: "Document ready to sign: Q4 commercial agreement", body: "Hi Pedro, Laura Gómez (Grupo Arenal) has sent you \"Q4 commercial agreement\" to sign. You can review and sign it in your NubeDocs account.", link: "https://app.nubedocs.com/documentos/8KQ2", answer: "legit",
+          clues: ["Sender and link both use the official domain nubedocs.com.", "You were expecting this contract: the client told you by phone.", "No urgency or threats. If in doubt, open NubeDocs from your bookmarks."] },
+        { ch: "email", from: "NubeDocs Sign <nubedocs.firma@gmail.com>", subject: "URGENT: your contract expires today", body: "You have a pending document that expires in 2 hours. Log in so you don't lose it:", link: "http://nubedocs.firma-segura.xyz/login", answer: "phish",
+          clues: ["The sender uses a Gmail account, not the NubeDocs domain.", "The real domain is firma-segura.xyz: \"nubedocs\" is just a subdomain.", "Extreme urgency and a link without HTTPS."] },
+        { ch: "email", from: "BancoNorte <avisos@banconorte-seguridad.com>", subject: "Unusual sign-in detected on your account", body: "We have locked your account for security reasons. Verify your identity to unlock it:", link: "https://banconorte.es.verificacion-clientes.com/acceso", answer: "phish",
+          clues: ["The real domain is verificacion-clientes.com: \"banconorte.es\" is a fake subdomain.", "It uses fear (locked account) to make you act fast.", "Banks don't ask you to verify your identity through a link."] },
+        { ch: "chat", from: "+34 6XX XXX 214 (unknown number)", body: "Hi Mum, my phone broke and this is my new number. Can you send me €480? It's urgent, I'll explain later.", link: null, answer: "phish",
+          clues: ["An unknown number claims to be a relative.", "Asks for money in a hurry, with no explanation.", "Before doing anything, call their usual number."] },
+        { ch: "email", from: "IT Support <it@hexatech.com>", subject: "Reminder: cybersecurity training on Thursday", body: "Hi all, a reminder about Thursday's training session at 10:00. The agenda is on the intranet:", link: "https://intranet.hexatech.com/formacion", answer: "legit",
+          clues: ["Sender and link are on your company's domain (hexatech.com).", "It only informs: no passwords or payments requested.", "It's an event you already knew about."] },
+        { ch: "email", from: "Mail service <admin@hexatech-mail.support>", subject: "Your mailbox is full (99 %)", body: "You will stop receiving email in 12 hours. Get more space for free by logging in:", link: "https://hexatech-mail.support/cuota/login", answer: "phish",
+          clues: ["hexatech-mail.support looks like your company's domain, but it isn't hexatech.com.", "It threatens lost email to rush you.", "It asks you to log in from a link in the email."] },
+        { ch: "sms", from: "PohjoisPosti", body: "We couldn't deliver your parcel. Update your delivery address here:", link: "posti-fi.delivery-update.icu/track", answer: "phish",
+          clues: ["A delivery notice you weren't expecting.", "The real domain is delivery-update.icu, unrelated to any postal company.", "\"posti-fi\" imitates a Finnish site: attackers tailor the scam to each country."] },
+        { ch: "email", from: "Streamly <facturacion@streamly.com>", subject: "Your October receipt", body: "Hi Pedro, your October receipt (€12.99) is now available. You can view it any time in your account.", link: "https://www.streamly.com/cuenta/recibos", answer: "legit",
+          clues: ["Official Streamly domain in both the sender and the link.", "It asks for no data or extra payments: it only informs.", "The amount matches your usual subscription."] },
+        { ch: "email", from: "Tax Office <reembolsos@gob-es.info>", subject: "You have a €348.50 refund", body: "After reviewing your tax return, you are owed a refund. Claim it within 48 hours by entering your card details:", link: "https://reembolso.gob-es.info/solicitud", answer: "phish",
+          clues: ["\"gob-es.info\" imitates official .gob.es domains, but it isn't one.", "Unexpected money plus a short deadline: the classic bait.", "No public body asks for your card details by email."] },
+      ],
+    },
+  };
+
+  /* =====================================================================
+     3. MOTOR DE ANÁLISIS
+     ===================================================================== */
+
+  // Decodificador punycode (RFC 3492) para mostrar cómo se ve un dominio xn--
+  function punyDecode(input) {
+    const base = 36, tMin = 1, tMax = 26, skew = 38, damp = 700;
+    const adapt = (delta, numPoints, first) => {
+      let k = 0;
+      delta = first ? Math.floor(delta / damp) : delta >> 1;
+      delta += Math.floor(delta / numPoints);
+      while (delta > ((base - tMin) * tMax) >> 1) { delta = Math.floor(delta / (base - tMin)); k += base; }
+      return Math.floor(k + ((base - tMin + 1) * delta) / (delta + skew));
+    };
+    const digitOf = (cp) => (cp >= 48 && cp <= 57) ? cp - 22 : (cp >= 65 && cp <= 90) ? cp - 65 : (cp >= 97 && cp <= 122) ? cp - 97 : base;
+    const out = [];
+    let n = 128, bias = 72, i = 0;
+    const b = input.lastIndexOf("-");
+    for (let j = 0; j < Math.max(b, 0); j++) out.push(input.charCodeAt(j));
+    for (let idx = b > 0 ? b + 1 : 0; idx < input.length;) {
+      const oldi = i;
+      let w = 1;
+      for (let k = base; ; k += base) {
+        if (idx >= input.length) throw new Error("punycode");
+        const digit = digitOf(input.charCodeAt(idx++));
+        if (digit >= base) throw new Error("punycode");
+        i += digit * w;
+        const t = k <= bias ? tMin : k >= bias + tMax ? tMax : k - bias;
+        if (digit < t) break;
+        w *= base - t;
+      }
+      const len = out.length + 1;
+      bias = adapt(i - oldi, len, oldi === 0);
+      n += Math.floor(i / len);
+      i %= len;
+      out.splice(i++, 0, n);
+    }
+    return String.fromCodePoint(...out);
+  }
+  const showLabel = (label) => {
+    if (!label.startsWith("xn--")) return label;
+    try { return punyDecode(label.slice(4)); } catch (e) { return label; }
+  };
+
+  function levenshtein(a, b) {
+    if (!a.length) return b.length;
+    if (!b.length) return a.length;
+    let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+    for (let i = 1; i <= a.length; i++) {
+      const cur = [i];
+      for (let j = 1; j <= b.length; j++) {
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      }
+      prev = cur;
+    }
+    return prev[b.length];
+  }
+
+  function normalizeGlyphs(s) {
+    let r = "";
+    for (const ch of s) r += HOMOGLYPHS[ch] || ch;
+    return r.replace(/rn/g, "m").replace(/vv/g, "w");
+  }
+
+  // ¿Este fragmento del dominio coincide con (o imita a) una marca?
+  function matchBrand(token) {
+    if (token.length < 3) return null;
+    const norm = normalizeGlyphs(token);
+    for (const brand of BRANDS) {
+      for (const key of brand.keys) {
+        if (token === key) return { brand, key, kind: "exact" };
+        if (norm === key) return { brand, key, kind: "glyph" };
+        if (key.length >= 6 && !brand.noTypo) {
+          const max = key.length >= 9 ? 2 : 1;
+          const d = levenshtein(norm, key);
+          if (d > 0 && d <= max) return { brand, key, kind: "typo", d };
+          if (norm.length > key.length && (norm.startsWith(key) || norm.endsWith(key))) return { brand, key, kind: "contains" };
+        }
+      }
+    }
+    return null;
+  }
+
+  function tokensOf(label) {
+    const shown = showLabel(label);
+    const parts = shown.split("-").filter(Boolean);
+    const set = new Set(parts);
+    if (parts.length > 1) set.add(parts.join(""));
+    return [...set];
+  }
+
+  function splitHost(host) {
+    const labels = host.split(".").filter(Boolean);
+    if (labels.length < 2) return { domain: host, sub: [], name: labels[0] || host, tld: "" };
+    const n = MULTI_SUFFIX.has(labels.slice(-2).join(".")) && labels.length >= 3 ? 3 : 2;
+    const dom = labels.slice(-n);
+    return { domain: dom.join("."), sub: labels.slice(0, -n), name: dom[0], tld: labels[labels.length - 1] };
+  }
+
+  function officialBrand(host, domain) {
+    for (const b of BRANDS) {
+      for (const d of b.domains) {
+        if (domain === d || host === d || host.endsWith("." + d)) return b;
+      }
+    }
+    return null;
+  }
+
+  function parseInput(raw) {
+    let s = (raw || "").trim().replace(/[​-‍﻿]/g, "");
+    if (!s) return { error: "empty" };
+    if (/\s/.test(s)) return { error: "invalid" };
+    if (/^(javascript|data|vbscript|file|mailto|tel|ftp):/i.test(s)) return { error: "scheme" };
+    const schemeGiven = /^[a-z][a-z0-9+.-]*:\/\//i.test(s);
+    let url;
+    try { url = new URL(schemeGiven ? s : "http://" + s); } catch (e) { return { error: "invalid" }; }
+    if (url.protocol !== "http:" && url.protocol !== "https:") return { error: "scheme" };
+    const host = url.hostname.toLowerCase();
+    const isIP = /^\d{1,3}(\.\d{1,3}){3}$/.test(host) || host.startsWith("[");
+    if (!host || (!isIP && !host.includes("."))) return { error: "invalid" };
+    return { url, host, isIP, schemeGiven, raw: s };
+  }
+
+  function analyze(raw) {
+    const p = parseInput(raw);
+    if (p.error) return p;
+    const { url, host, isIP, schemeGiven } = p;
+    const parts = isIP ? { domain: host, sub: [], name: host, tld: "" } : splitHost(host);
+    const official = isIP ? null : officialBrand(host, parts.domain);
+    const hits = [];
+    const notes = [];
+    const add = (id, k, params) => { if (!hits.some((h) => h.id === id)) hits.push({ id, k, p: params || {}, pts: POINTS[id] }); };
+
+    // R1 · IP en lugar de dominio
+    if (isIP) add("R1", "ip", { ip: host });
+
+    if (!isIP && !official) {
+      // R2 · marca imitada o usada en un dominio ajeno
+      for (const t of tokensOf(parts.name)) {
+        const m = matchBrand(t);
+        if (!m) continue;
+        if (m.kind === "glyph" || m.kind === "typo") add("R2", m.kind, { token: t, key: m.key, brand: m.brand.name, d: m.d });
+        else add("R2", "name", { brand: m.brand.name, domain: parts.domain });
+        break;
+      }
+      if (/(^|-)(gob|gov)(-|$)/.test(parts.name)) add("R2", "gov", { domain: parts.domain });
+
+      // R5 · marca o dominio falso delante del dominio real
+      let subHit = null, fakeTld = false;
+      parts.sub.forEach((label, idx) => {
+        if (idx > 0 && TLD_LIKE.has(label)) fakeTld = true;
+        for (const t of tokensOf(label)) {
+          const m = matchBrand(t);
+          if (m && !subHit) subHit = { m, t };
+        }
+      });
+      if (subHit && (subHit.m.kind === "glyph" || subHit.m.kind === "typo")) {
+        add("R2", subHit.m.kind, { token: subHit.t, key: subHit.m.key, brand: subHit.m.brand.name, d: subHit.m.d });
+      }
+      if (parts.sub.length && (subHit || fakeTld)) add("R5", "sub", { domain: parts.domain, sub: parts.sub.join(".") });
+    }
+
+    // R3 · punycode
+    if (!isIP) {
+      const puny = host.split(".").find((l) => l.startsWith("xn--"));
+      if (puny && !official) add("R3", "puny", { label: host, decoded: host.split(".").map(showLabel).join(".") });
+    }
+
+    // R4 · símbolo @
+    if (url.username) {
+      let user = url.username;
+      try { user = decodeURIComponent(user); } catch (e) { /* se deja tal cual */ }
+      add("R4", "at", { user, host });
+    }
+
+    // R6 · acortadores
+    if (SHORTENERS.has(parts.domain) || SHORTENERS.has(host)) add("R6", "short", { domain: parts.domain });
+
+    // R7 · palabras cebo (no se aplica a dominios oficiales)
+    if (!official) {
+      let text = host + " " + url.pathname + " " + url.search;
+      try { text = decodeURIComponent(text); } catch (e) { /* ignorar */ }
+      text = text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+      const found = BAIT.filter((w) => text.includes(w));
+      const words = found.filter((w) => !found.some((o) => o !== w && o.includes(w))).slice(0, 4);
+      if (words.length) add("R7", "bait", { words: words.join(", ") });
+    }
+
+    // R8 · sin HTTPS
+    if (schemeGiven && url.protocol === "http:") add("R8", "http");
+    if (!schemeGiven) notes.push({ k: "noScheme" });
+
+    // R9 · enlace largo o muchos subdominios
+    const hyphens = (host.match(/-/g) || []).length;
+    if (p.raw.length > 75) add("R9", "len", { n: p.raw.length });
+    else if (parts.sub.length > 3) add("R9", "subs", { n: parts.sub.length });
+    else if (hyphens >= 4) add("R9", "hyph", { n: hyphens });
+
+    // R10 · extensión engañosa
+    if (FILE_TLD.has(parts.tld)) add("R10", "file", { tld: parts.tld });
+    else if (CHEAP_TLD.has(parts.tld)) add("R10", "cheap", { tld: parts.tld });
+
+    if (official) notes.unshift({ k: "official", brand: official.name });
+
+    const score = Math.min(100, hits.reduce((s, h) => s + h.pts, 0));
+    const level = score >= 60 ? "high" : score >= 30 ? "med" : "low";
+    hits.sort((a, b) => b.pts - a.pts || RULE_IDS.indexOf(a.id) - RULE_IDS.indexOf(b.id));
+
+    // Partes del enlace para la "anatomía"
+    const segs = [];
+    if (schemeGiven) segs.push({ cls: "scheme", text: url.protocol + "//" });
+    if (url.username) segs.push({ cls: "user", text: url.username + (url.password ? ":" + url.password : "") + "@" });
+    if (parts.sub.length) segs.push({ cls: "sub", text: parts.sub.join(".") + "." });
+    segs.push({ cls: "dom", text: parts.domain + (url.port ? ":" + url.port : "") });
+    const path = url.pathname + url.search + url.hash;
+    if (path && path !== "/") segs.push({ cls: "path", text: path });
+    const decodedHost = host.split(".").map(showLabel).join(".");
+
+    return { hits, notes, score, level, official, segs, idn: decodedHost !== host ? decodedHost : null,
+      passed: RULE_IDS.filter((id) => !hits.some((h) => h.id === id)) };
+  }
+
+  /* =====================================================================
+     4. INTERFAZ (se construye con textContent: nunca innerHTML con datos del usuario)
+     ===================================================================== */
+  function el(tag, props, ...kids) {
+    const node = document.createElement(tag);
+    if (props) {
+      for (const [k, v] of Object.entries(props)) {
+        if (v == null || v === false) continue;
+        if (k === "class") node.className = v;
+        else if (k === "text") node.textContent = v;
+        else if (k === "style") node.style.cssText = v;
+        else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
+        else node.setAttribute(k, v === true ? "" : v);
+      }
+    }
+    for (const kid of kids.flat()) {
+      if (kid == null || kid === false) continue;
+      node.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+    }
+    return node;
+  }
+  const $ = (id) => document.getElementById(id);
+
+  let lang = "es";
+  try { const saved = localStorage.getItem("apl-lang"); if (saved === "es" || saved === "en") lang = saved; } catch (e) { /* sin almacenamiento */ }
+  const t = () => T[lang];
+
+  function applyStatic() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach((n) => { n.textContent = t()[n.dataset.i18n]; });
+    document.querySelectorAll("[data-i18n-ph]").forEach((n) => { n.placeholder = t()[n.dataset.i18nPh]; });
+    document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+    renderExamples();
+    renderRules();
+  }
+
+  function renderExamples() {
+    const box = $("examples");
+    box.replaceChildren(el("span", { text: t().examples }),
+      ...EXAMPLES.map((ex, i) => el("button", { type: "button", class: "chip", id: "ex-" + i, onclick: () => { $("url").value = ex.url; runAnalysis(); } }, ex[lang])));
+  }
+
+  let lastInput = "";
+  function runAnalysis() {
+    lastInput = $("url").value;
+    renderResult(analyze(lastInput));
+  }
+
+  function renderResult(res) {
+    const box = $("resultado");
+    const L = t();
+    if (res.error) {
+      box.replaceChildren(el("div", { class: "error", role: "alert" }, L.errors[res.error]));
+      return;
+    }
+    const lvlClass = { low: "lvl-low", med: "lvl-med", high: "lvl-high" }[res.level];
+    const adv = res.official && res.level === "low" ? L.advice.official : L.advice[res.level];
+    const brandName = res.official ? res.official.name : "";
+
+    const verdict = el("div", { class: "card verdict" },
+      el("div", { class: "light", "aria-hidden": "true" },
+        el("div", { class: "lamp r" + (res.level === "high" ? " on" : "") }),
+        el("div", { class: "lamp a" + (res.level === "med" ? " on" : "") }),
+        el("div", { class: "lamp g" + (res.level === "low" ? " on" : "") })),
+      el("div", null,
+        el("p", { class: "level" }, L.levels[res.level]),
+        el("p", { class: "score" }, String(res.score), el("small", null, " / 100")),
+        el("div", { class: "meter", role: "img", "aria-label": res.score + " / 100" }, el("span", { style: "width:" + res.score + "%" }))),
+      el("div", { class: "advice" }, el("strong", null, adv[0].replace("{brand}", brandName)), el("p", null, adv[1])),
+      el("p", { class: "disclaimer" }, L.disclaimer));
+
+    const anatomy = el("div", { class: "anatomy" },
+      res.segs.map((s) => el("span", { class: "seg " + s.cls }, el("code", null, s.text), el("small", null, L.seg[s.cls]))));
+
+    const reasons = res.hits.length
+      ? el("ol", { class: "reasons" }, res.hits.map((h) => {
+          const rule = L.rules[h.id];
+          return el("li", null,
+            el("span", { class: "pts" + (h.pts >= 25 ? " big" : "") }, "+" + h.pts),
+            el("div", null, el("b", null, el("span", { class: "rid" }, h.id), rule.name), el("p", null, rule.msg[h.k](h.p))));
+        }))
+      : el("p", { class: "none" }, L.noHits);
+
+    const notes = res.notes.length
+      ? el("ul", { class: "notes" }, res.notes.map((n) => el("li", null, L.notes[n.k].replace("{brand}", n.brand || ""))))
+      : null;
+
+    const detail = el("div", { class: "card" },
+      el("h2", null, L.anatomy), anatomy,
+      res.idn ? el("p", { class: "idn" }, L.idn + " ", el("code", null, res.idn)) : null,
+      el("h2", { style: "margin-top:22px" }, L.why), reasons, notes,
+      res.passed.length ? el("div", { class: "passed" },
+        el("span", { class: "eyebrow" }, L.passed),
+        el("div", { class: "passed-list" }, res.passed.map((id) => el("span", { class: "ok", title: L.rules[id].name }, id + " · " + L.rules[id].name)))) : null);
+
+    box.replaceChildren(el("div", { class: "grid " + lvlClass }, verdict, detail));
+  }
+
+  /* ---------- modo entrenamiento ---------- */
+  const train = { i: 0, score: 0, answer: null, done: false };
+
+  function renderTraining() {
+    const L = t();
+    const cases = L.cases;
+    const area = $("train-area");
+    const answered = train.answer !== null;
+    const progressIdx = train.done ? cases.length : train.i + (answered ? 1 : 0);
+    $("train-bar").style.width = (progressIdx / cases.length) * 100 + "%";
+    $("train-progress").textContent = L.caseOf(Math.min(train.i + 1, cases.length), cases.length, train.score);
+
+    if (train.done) {
+      const k = train.score, n = cases.length;
+      const msg = k >= 9 ? L.endMsg.top : k >= 6 ? L.endMsg.mid : L.endMsg.low;
+      area.replaceChildren(el("div", { class: "card end" },
+        el("span", { class: "eyebrow" }, L.endTitle),
+        el("p", { class: "big" }, k + " / " + n),
+        el("p", null, L.endScore(k, n) + " " + msg),
+        el("div", { class: "actions" }, el("button", { type: "button", class: "btn-primary", id: "btn-restart", onclick: () => { Object.assign(train, { i: 0, score: 0, answer: null, done: false }); renderTraining(); } }, L.restart))));
+      return;
+    }
+
+    const c = cases[train.i];
+    const isEmail = c.ch === "email";
+    const bodyNode = isEmail
+      ? el("div", { class: "msg-body" }, el("p", null, c.body), c.link ? el("span", { class: "fake-link" }, c.link) : null)
+      : el("div", { class: "msg-body" }, el("div", { class: "bubble" }, el("p", null, c.body), c.link ? el("span", { class: "fake-link" }, c.link) : null));
+
+    const pick = (choice) => {
+      if (train.answer !== null) return;
+      train.answer = choice;
+      if (choice === c.answer) train.score++;
+      renderTraining();
+    };
+
+    const message = el("div", null,
+      el("div", { class: "msg" },
+        el("div", { class: "msg-top" }, el("span", { class: "channel" }, L.channel[c.ch]),
+          el("span", { class: "fict" }, c.ch === "chat" ? "" : "(" + L.fictional + ")")),
+        el("div", { class: "msg-meta" },
+          el("div", null, el("span", null, L.from), el("span", { class: "from" }, c.from)),
+          isEmail ? el("div", null, el("span", null, L.subject), el("strong", null, c.subject)) : null),
+        bodyNode),
+      el("div", { class: "choices" },
+        el("button", { type: "button", id: "btn-legit", class: "choice legit" + (train.answer === "legit" ? " picked" : ""), disabled: answered, onclick: () => pick("legit") }, L.legit),
+        el("button", { type: "button", id: "btn-phish", class: "choice phish" + (train.answer === "phish" ? " picked" : ""), disabled: answered, onclick: () => pick("phish") }, L.phish)));
+
+    let side;
+    if (!answered) {
+      side = el("div", { class: "hint" }, L.pickHint);
+    } else {
+      const ok = train.answer === c.answer;
+      const last = train.i === cases.length - 1;
+      side = el("div", { class: "feedback " + (ok ? "good" : "bad"), role: "status" },
+        el("h3", null, ok ? L.correct : L.wrong),
+        el("p", { class: "sub" }, c.answer === "phish" ? L.wasPhish : L.wasLegit),
+        el("ul", { class: "clues" }, c.clues.map((x) => el("li", null, x))),
+        el("div", { class: "actions" },
+          c.link ? el("button", { type: "button", class: "btn-ghost", id: "btn-check-link", onclick: () => { $("url").value = c.link; showTab("analizar"); runAnalysis(); window.scrollTo({ top: 0 }); } }, L.analyzeLink) : null,
+          el("button", { type: "button", class: "btn-primary", id: "btn-next", onclick: () => { if (last) train.done = true; else { train.i++; } train.answer = null; renderTraining(); } }, last ? L.finish : L.next)));
+    }
+    area.replaceChildren(el("div", { class: "train-grid" }, message, side));
+  }
+
+  /* ---------- cómo funciona ---------- */
+  function renderRules() {
+    const L = t();
+    $("rules-body").replaceChildren(...RULE_IDS.map((id) => {
+      const r = L.rules[id];
+      return el("tr", null, el("td", null, el("b", null, id + ". "), r.name), el("td", null, el("code", null, r.ex)), el("td", null, r.why), el("td", { class: "num" }, "+" + POINTS[id]));
+    }));
+    const ranges = { low: "0 – 29", med: "30 – 59", high: "60 – 100" };
+    $("levels").replaceChildren(...["low", "med", "high"].map((k) =>
+      el("div", { class: "lv lvl-" + k }, el("b", null, L.levels[k]), el("span", null, ranges[k]), el("p", null, L.levelText[k]))));
+  }
+
+  /* ---------- pestañas e idioma ---------- */
+  const TABS = ["analizar", "entrenar", "reglas"];
+  function showTab(name) {
+    if (!TABS.includes(name)) name = "analizar";
+    TABS.forEach((tab) => {
+      $("panel-" + tab).hidden = tab !== name;
+      $("tab-" + tab).setAttribute("aria-selected", String(tab === name));
+    });
+    try { history.replaceState(null, "", "#" + name); } catch (e) { /* sin historial */ }
+  }
+  document.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
+  document.querySelectorAll(".lang button").forEach((b) => b.addEventListener("click", () => {
+    lang = b.dataset.lang;
+    try { localStorage.setItem("apl-lang", lang); } catch (e) { /* sin almacenamiento */ }
+    applyStatic();
+    renderResult(analyze(lastInput));
+    renderTraining();
+  }));
+  $("form-analizar").addEventListener("submit", (e) => { e.preventDefault(); runAnalysis(); });
+
+  // Estado inicial: un ejemplo ya analizado para que se vea cómo funciona
+  applyStatic();
+  $("url").value = EXAMPLES[0].url;
+  runAnalysis();
+  renderTraining();
+  showTab((location.hash || "").slice(1));
+})();
+</script>
+</body>
+</html>
