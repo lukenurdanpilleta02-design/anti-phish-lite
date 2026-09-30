@@ -23,12 +23,6 @@ La página no carga nada de terceros: las fuentes están incluidas en la carpeta
 
 Abre `index.html` en el navegador. No hace falta instalar nada.
 
-## Publicarlo con GitHub Pages
-
-1. Crea un repositorio **público** en GitHub, por ejemplo `anti-phish-lite`.
-2. Sube a la raíz del repositorio todo el contenido de esta carpeta: `index.html`, la carpeta `fonts/`, `README.md` y `LICENSE`.
-3. En el repositorio, ve a **Settings → Pages**. En *Source* elige **Deploy from a branch**, rama **main** y carpeta **/ (root)**, y pulsa **Save**.
-4. En unos minutos estará en `https://TU-USUARIO.github.io/anti-phish-lite/`.
 
 ## Estructura
 
